@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Samruddhi Dhoot — Data Analyst</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --surface2: #1a1a26;
+      --border: #2a2a3d;
+      --accent: #7c5cbf;
+      --accent2: #b48ef5;
+      --accent3: #4ecdc4;
+      --text: #e8e8f0;
+      --muted: #8888aa;
+      --highlight: #c9b8ff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* Noise overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* Gradient orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .orb-1 { width: 500px; height: 500px; background: rgba(124,92,191,0.12); top: -100px; right: -100px; }
+    .orb-2 { width: 400px; height: 400px; background: rgba(78,205,196,0.07); bottom: 200px; left: -100px; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 60px;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      color: var(--accent2);
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links { display: flex; gap: 32px; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent2); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 120px 60px 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-inner { max-width: 900px; }
+
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 11px;
+      color: var(--accent3);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .hero-tag::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent3);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(48px, 8vw, 96px);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -3px;
+      margin-bottom: 8px;
+    }
+
+    .name-line { display: block; }
+    .name-first { color: var(--text); }
+    .name-last {
+      color: transparent;
+      -webkit-text-stroke: 1.5px var(--accent2);
+    }
+
+    .hero-role {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      color: var(--muted);
+      font-size: 20px;
+      margin-bottom: 32px;
+      margin-top: 8px;
+    }
+
+    .hero-desc {
+      max-width: 580px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+      margin-bottom: 48px;
+    }
+
+    .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 28px;
+      border-radius: 4px;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+    .btn-primary:hover { background: var(--accent2); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(124,92,191,0.4); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--accent2);
+      border: 1px solid var(--accent);
+    }
+    .btn-outline:hover { background: var(--surface2); transform: translateY(-2px); }
+
+    /* SECTION */
+    section {
+      padding: 100px 60px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent3);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -1.5px;
+      margin-bottom: 56px;
+    }
+
+    .section-divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border) 0%, transparent 100%);
+      margin-bottom: 80px;
+    }
+
+    /* ABOUT */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+      max-width: 1000px;
+    }
+
+    .about-text p {
+      color: var(--muted);
+      line-height: 1.9;
+      margin-bottom: 20px;
+    }
+
+    .about-text p strong { color: var(--highlight); font-weight: 400; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 24px;
+    }
+
+    .stat-card:first-child { border-radius: 8px 0 0 0; }
+    .stat-card:nth-child(2) { border-radius: 0 8px 0 0; }
+    .stat-card:nth-child(3) { border-radius: 0 0 0 8px; }
+    .stat-card:last-child { border-radius: 0 0 8px 0; }
+
+    .stat-number {
+      font-family: 'Syne', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--accent2);
+      letter-spacing: -1px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* SKILLS */
+    .skills-container { max-width: 1000px; }
+
+    .skill-category { margin-bottom: 48px; }
+
+    .skill-cat-title {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+
+    .skill-tag {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 18px;
+      border-radius: 3px;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+
+    .skill-tag:hover {
+      border-color: var(--accent);
+      color: var(--accent2);
+      transform: translateY(-2px);
+    }
+
+    .skill-tag.accent { border-color: var(--accent); color: var(--accent2); }
+    .skill-tag.teal { border-color: var(--accent3); color: var(--accent3); }
+
+    /* EXPERIENCE */
+    .exp-container { max-width: 800px; }
+
+    .exp-item {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 40px;
+      margin-bottom: 56px;
+      padding-bottom: 56px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .exp-item:last-child { border-bottom: none; margin-bottom: 0; }
+
+    .exp-meta { text-align: right; }
+
+    .exp-period {
+      font-size: 11px;
+      color: var(--accent3);
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .exp-company {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .exp-role {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+    }
+
+    .exp-loc {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+
+    .exp-desc {
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .exp-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+
+    .exp-tag {
+      background: rgba(124,92,191,0.1);
+      border: 1px solid rgba(124,92,191,0.3);
+      color: var(--accent2);
+      padding: 4px 12px;
+      border-radius: 2px;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+    }
+
+    /* CONTACT */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      max-width: 900px;
+    }
+
+    .contact-left h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+    }
+
+    .contact-left p {
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 32px;
+    }
+
+    .contact-links { display: flex; flex-direction: column; gap: 16px; }
+
+    .contact-link {
+      display: flex; align-items: center; gap: 16px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 0.2s;
+      padding: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+
+    .contact-link:hover { color: var(--accent2); border-color: var(--accent); }
+
+    .contact-icon {
+      width: 36px; height: 36px;
+      background: var(--surface2);
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    /* RESUME */
+    .resume-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .resume-card .resume-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    .resume-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .resume-card p {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 24px;
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 40px 60px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    footer p { color: var(--muted); font-size: 12px; }
+    footer span { color: var(--accent2); }
+
+    /* ANIMATIONS */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .hero, section { padding: 80px 24px; }
+      .hero { padding-top: 120px; }
+      .about-grid, .contact-grid { grid-template-columns: 1fr; }
+      .exp-item { grid-template-columns: 1fr; gap: 8px; }
+      .exp-meta { text-align: left; }
+      footer { flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">SD_</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#experience">Experience</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-inner">
+    <div class="hero-tag">Open to opportunities</div>
+    <h1>
+      <span class="name-line name-first">Samruddhi</span>
+      <span class="name-line name-last">Dhoot</span>
+    </h1>
+    <p class="hero-role">Senior Data Analyst & AI/DS Engineer</p>
+    <p class="hero-desc">
+      B.E. in Artificial Intelligence & Data Science (CGPA 8.8) · 
+      Building ETL pipelines, interactive dashboards, and ML-powered systems 
+      at the intersection of data and design.
+    </p>
+    <div class="hero-ctas">
+      <a href="#contact" class="btn btn-primary">Get in touch ↗</a>
+      <a href="assets/Samruddhi_Dhoot_Resume.pdf" download class="btn btn-outline">↓ Download Resume</a>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="section-label">01 / About</p>
+  <h2 class="section-title">Who I am</h2>
+  <div class="about-grid fade-in">
+    <div class="about-text">
+      <p>
+        I graduated in 2024 with a B.E. in <strong>Artificial Intelligence & Data Science</strong> with an excellent CGPA of <strong>8.8</strong>. My passion lies at the crossroads of data engineering and intelligent systems.
+      </p>
+      <p>
+        Currently at <strong>Cube Green Energy</strong> as a Senior Data Analyst Associate, I design and maintain <strong>ETL/ELT pipelines</strong>, develop SQL-driven analytics datasets, and build large-scale web applications using Dash with custom JS and CSS to deliver production-ready dashboards.
+      </p>
+      <p>
+        My journey also includes an internship as a <strong>Python Developer at MaticAlgos</strong>, where I built solid experience in stock market analysis, web scraping, and API testing.
+      </p>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number">8.8</div>
+        <div class="stat-label">CGPA</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">1.5+</div>
+        <div class="stat-label">Years Exp</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">3+</div>
+        <div class="stat-label">Tech Stacks</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">2024</div>
+        <div class="stat-label">Graduate</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <p class="section-label">02 / Skills</p>
+  <h2 class="section-title">Tech Stack</h2>
+  <div class="skills-container fade-in">
+
+    <div class="skill-category">
+      <p class="skill-cat-title">Languages & Core</p>
+      <div class="skill-tags">
+        <span class="skill-tag accent">Python</span>
+        <span class="skill-tag accent">R</span>
+        <span class="skill-tag">DSA</span>
+        <span class="skill-tag">OOP</span>
+        <span class="skill-tag">HTML</span>
+        <span class="skill-tag">CSS</span>
+        <span class="skill-tag">JavaScript</span>
+      </div>
+    </div>
+
+    <div class="skill-category">
+      <p class="skill-cat-title">Data & Databases</p>
+      <div class="skill-tags">
+        <span class="skill-tag accent">MySQL</span>
+        <span class="skill-tag accent">PL/SQL</span>
+        <span class="skill-tag accent">MongoDB</span>
+        <span class="skill-tag">ETL / ELT Pipelines</span>
+        <span class="skill-tag">Database Management</span>
+      </div>
+    </div>
+
+    <div class="skill-category">
+      <p class="skill-cat-title">Data Science & ML</p>
+      <div class="skill-tags">
+        <span class="skill-tag teal">Machine Learning</span>
+        <span class="skill-tag teal">NLP</span>
+        <span class="skill-tag teal">Data Analytics</span>
+        <span class="skill-tag teal">Information Retrieval</span>
+        <span class="skill-tag">Stock Market Analysis</span>
+        <span class="skill-tag">Web Scraping</span>
+        <span class="skill-tag">API Development</span>
+      </div>
+    </div>
+
+    <div class="skill-category">
+      <p class="skill-cat-title">Visualization & Frameworks</p>
+      <div class="skill-tags">
+        <span class="skill-tag accent">Power BI</span>
+        <span class="skill-tag accent">Plotly Dash</span>
+        <span class="skill-tag accent">Streamlit</span>
+        <span class="skill-tag">Pandas</span>
+        <span class="skill-tag">NumPy</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <p class="section-label">03 / Experience</p>
+  <h2 class="section-title">Where I've worked</h2>
+  <div class="exp-container fade-in">
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <p class="exp-period">Dec 2025 — Present</p>
+        <p class="exp-company">Cube Green Energy</p>
+      </div>
+      <div>
+        <p class="exp-role">Senior Data Analyst Associate</p>
+        <p class="exp-loc">📍 Hyderabad, India</p>
+        <p class="exp-desc">
+          Designing and maintaining ETL/ELT pipelines, developing SQL-driven analytics datasets, and building large-scale web applications using Dash with custom JS & CSS to deliver interactive, production-ready dashboards for business users.
+        </p>
+        <div class="exp-tags">
+          <span class="exp-tag">ETL Pipelines</span>
+          <span class="exp-tag">SQL</span>
+          <span class="exp-tag">Plotly Dash</span>
+          <span class="exp-tag">Dashboards</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <p class="exp-period">Dec 2024 — Nov 2025</p>
+        <p class="exp-company">Cube Green Energy</p>
+      </div>
+      <div>
+        <p class="exp-role">Data Analytics Intern</p>
+        <p class="exp-loc">📍 Hyderabad, Telangana, India</p>
+        <p class="exp-desc">
+          Started as an intern, contributing to data analytics workflows, pipeline development, and building the foundation of dashboarding capabilities used in production.
+        </p>
+        <div class="exp-tags">
+          <span class="exp-tag">Data Analytics</span>
+          <span class="exp-tag">Python</span>
+          <span class="exp-tag">Power BI</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <p class="exp-period">Jan 2024 — Mar 2024</p>
+        <p class="exp-company">MaticAlgos</p>
+      </div>
+      <div>
+        <p class="exp-role">Python Intern</p>
+        <p class="exp-loc">📍 Pune, Maharashtra, India</p>
+        <p class="exp-desc">
+          Developed web scrapers and APIs for collecting OHLCV data from trading websites. Gained strong understanding of stock market mechanics, technical analysis, and production API testing.
+        </p>
+        <div class="exp-tags">
+          <span class="exp-tag">Python</span>
+          <span class="exp-tag">Web Scraping</span>
+          <span class="exp-tag">API Testing</span>
+          <span class="exp-tag">Stock Market</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-meta">
+        <p class="exp-period">Aug 2022 — Mar 2023</p>
+        <p class="exp-company">GDSC AISSMS IOIT</p>
+      </div>
+      <div>
+        <p class="exp-role">Management Team Member</p>
+        <p class="exp-loc">📍 Pune, Maharashtra, India</p>
+        <p class="exp-desc">
+          Contributed to the Google Developer Student Club as a management team member, organizing events, workshops, and community initiatives around technology and innovation.
+        </p>
+        <div class="exp-tags">
+          <span class="exp-tag">Leadership</span>
+          <span class="exp-tag">Community</span>
+          <span class="exp-tag">Event Management</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- EDUCATION -->
+<section>
+  <p class="section-label">04 / Education</p>
+  <h2 class="section-title">Academic background</h2>
+  <div class="exp-container fade-in">
+    <div class="exp-item">
+      <div class="exp-meta">
+        <p class="exp-period">Sep 2020 — Jun 2024</p>
+        <p class="exp-company">AISSMS IOIT</p>
+      </div>
+      <div>
+        <p class="exp-role">B.E. — AI & Data Science</p>
+        <p class="exp-loc">📍 Pune, Maharashtra, India</p>
+        <p class="exp-desc">Graduated with CGPA 8.8 specializing in Artificial Intelligence and Data Science. Coursework covered machine learning, data engineering, NLP, and information retrieval systems.</p>
+        <div class="exp-tags">
+          <span class="exp-tag">CGPA: 8.8</span>
+          <span class="exp-tag">AI & Data Science</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="section-label">05 / Contact</p>
+  <h2 class="section-title">Let's connect</h2>
+  <div class="contact-grid fade-in">
+    <div class="contact-left">
+      <h3>Always open to collaborate.</h3>
+      <p>
+        Whether it's a data challenge, an interesting project, or just a chat about AI and analytics — reach out. I'm always excited to connect with like-minded professionals.
+      </p>
+      <div class="contact-links">
+        <a href="mailto:samruddhi1222@gmail.com" class="contact-link">
+          <div class="contact-icon">✉</div>
+          samruddhi1222@gmail.com
+        </a>
+        <a href="https://www.linkedin.com/in/samruddhiidhoot" target="_blank" class="contact-link">
+          <div class="contact-icon">in</div>
+          linkedin.com/in/samruddhiidhoot
+        </a>
+        <a href="https://maps.app.goo.gl/hyderabad" class="contact-link" style="cursor:default; pointer-events:none;">
+          <div class="contact-icon">📍</div>
+          Hyderabad, Telangana, India
+        </a>
+      </div>
+    </div>
+    <div class="resume-card">
+      <div class="resume-icon">📄</div>
+      <h3>My Resume</h3>
+      <p>Download my full resume with detailed experience, skills, and education.</p>
+      <a href="assets/Samruddhi_Dhoot_Resume.pdf" download class="btn btn-primary" style="display:inline-flex; margin: 0 auto;">
+        ↓ Download Resume
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Designed & built by <span>Samruddhi Dhoot</span></p>
+  <p>samruddhi1222@gmail.com</p>
+</footer>
+
+<script>
+  // Intersection Observer for fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(el => {
+      if (el.isIntersecting) {
+        el.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Stagger hero animations on load
+  window.addEventListener('load', () => {
+    const heroEl = document.querySelector('.hero-inner');
+    heroEl.style.opacity = '0';
+    heroEl.style.transform = 'translateY(32px)';
+    heroEl.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+    setTimeout(() => {
+      heroEl.style.opacity = '1';
+      heroEl.style.transform = 'translateY(0)';
+    }, 100);
+  });
+</script>
+
+</body>
+</html>
