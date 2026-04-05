@@ -327,8 +327,8 @@ with c1:
       <a href="https://www.linkedin.com/in/samruddhiidhoot" target="_blank" class="contact-link">
         <div class="contact-icon">in</div> linkedin.com/in/samruddhiidhoot
       </a>
-      <a href="https://github.com/samruddhidhoot" target="_blank" class="contact-link">
-        <div class="contact-icon">⌥</div> github.com/samruddhidhoot
+      <a href="https://github.com/samruddhii12" target="_blank" class="contact-link">
+        <div class="contact-icon">⌥</div> github.com/samruddhii12
       </a>
       <div class="contact-link non-link">
         <div class="contact-icon">📍</div> Hyderabad, Telangana, India
